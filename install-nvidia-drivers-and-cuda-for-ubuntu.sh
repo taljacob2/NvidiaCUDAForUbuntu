@@ -185,18 +185,19 @@ do
           IS_INSTALL_CUDNN=true
           shift 1
           ;;
-      -c | --container)
-          if [[ "$1" == *=* ]]; then
-              CONTAINER_RUNTIME="${1#*=}"
-              shift
-          else
-              CONTAINER_RUNTIME="$2"
-              shift 2
-          fi
-          ;;
       -c=* | --container=*)
           CONTAINER_RUNTIME="${1#*=}"
           shift
+          if [[ "$CONTAINER_RUNTIME" != "docker" && "$CONTAINER_RUNTIME" != "containerd" && "$CONTAINER_RUNTIME" != "crio" ]]; then
+              echo "Error: Unsupported container runtime: $CONTAINER_RUNTIME"
+              echo "Supported values are: docker, containerd, crio"
+              exit 1
+          fi
+          if ! systemctl list-units --type=service | grep -q "${CONTAINER_RUNTIME}.service"; then
+              echo "Error: $CONTAINER_RUNTIME.service was not found on this system."
+              echo "Please install the container runtime beforehand, to be able to install the NVIDIA Container Toolkit."
+              exit 1
+          fi
           ;;
       -h | --help)
           displayHelp
