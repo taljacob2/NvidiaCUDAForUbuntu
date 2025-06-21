@@ -125,11 +125,14 @@ installNvidiaCudaDrivers() {
   # Install the proprietary kernel module flavor:
   sudo apt-get install -y cuda-drivers
 
-  cat << EOF | sudo tee -a /etc/bash.bashrc
-# Add nvidia cuda installation path
-export PATH=$PATH:/usr/local/cuda/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
-EOF
+  # Add environment variables if they are not already present
+  if ! grep -q 'export PATH=.*:/usr/local/cuda/bin' /etc/bash.bashrc; then
+    echo 'export PATH=$PATH:/usr/local/cuda/bin' | sudo tee -a /etc/bash.bashrc
+  fi
+
+  if ! grep -q 'export LD_LIBRARY_PATH=.*:/usr/local/cuda/lib64' /etc/bash.bashrc; then
+    echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64' | sudo tee -a /etc/bash.bashrc
+  fi
 
   # Import it to the shell:
   source /etc/bash.bashrc
