@@ -153,10 +153,14 @@ installCuDNN() {
 
 installNvidiaContainerToolkit() {
   # Documentation here: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
-  curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
-  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  # Add NVIDIA GPG key
+  curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | \
+  gpg --dearmor | sudo install -m 644 /dev/stdin /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+
+  # Add NVIDIA repository
+  curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
   sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list > /dev/null
 
   sudo apt-get update -y
 
