@@ -26,6 +26,13 @@ This script installs:
     ```
     or even further with https://docs.nvidia.com/deeplearning/cudnn/archives/cudnn-890/install-guide/index.html#verify
 
+  - **NVIDIA Container Toolkit**
+    Either for docker, containerd (Kubernetes) or crio.
+
+    *Prerequisites:*
+    The machine must already have the selected container runtime installed.
+
+
 Requirements:
 - Ubuntu Linux.
 - Secure boot is disabled (you can check it with 'mokutil --sb-state').
@@ -45,6 +52,7 @@ IS_HEADLESS_SERVER=false
 IS_REBOOT_AFTER_INSTALLATION=false
 IS_OVERWRITE_OTHER_INSTALLATIONS=false
 IS_INSTALL_CUDNN=false
+CONTAINER_RUNTIME=
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -76,6 +84,9 @@ displayHelp() {
     echo "                           Overwrite existing NVIDIA/CUDA installations."
     echo "  -d, --cudnn              Boolean. "false" by default."
     echo "                           Install cuDNN."
+    echo "  -c, --container          Accepts one of the following values: "docker", "containerd", "crio". Not set by default."
+    echo "                           Install NVIDIA Container Toolkit, and configures it to the selected container runtime."
+    echo "                           Examples: '-c=docker' or '--container=docker'"
     echo
     exit 0
 }
@@ -133,6 +144,26 @@ installCuDNN() {
   sudo apt-get install -y cudnn-cuda-12
 }
 
+installNvidiaContainerToolkit() {
+  # Documentation here: https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html
+  curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \
+  && curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+
+  sudo apt-get update -y
+
+  export NVIDIA_CONTAINER_TOOLKIT_VERSION=1.17.8-1
+  sudo apt-get install -y \
+  nvidia-container-toolkit=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+  nvidia-container-toolkit-base=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+  libnvidia-container-tools=${NVIDIA_CONTAINER_TOOLKIT_VERSION} \
+  libnvidia-container1=${NVIDIA_CONTAINER_TOOLKIT_VERSION}
+
+  # Configure container runtime
+  sudo nvidia-ctk runtime configure --runtime=$CONTAINER_RUNTIME
+  sudo systemctl restart $CONTAINER_RUNTIME
+}
 
 # Check if parameters options are given on the command line:
 while :
@@ -153,6 +184,19 @@ do
       -d | --cudnn)
           IS_INSTALL_CUDNN=true
           shift 1
+          ;;
+      -c | --container)
+          if [[ "$1" == *=* ]]; then
+              CONTAINER_RUNTIME="${1#*=}"
+              shift
+          else
+              CONTAINER_RUNTIME="$2"
+              shift 2
+          fi
+          ;;
+      -c=* | --container=*)
+          CONTAINER_RUNTIME="${1#*=}"
+          shift
           ;;
       -h | --help)
           displayHelp
@@ -189,6 +233,8 @@ installNvidiaDrivers
 installNvidiaCudaDrivers
 
 [ $IS_INSTALL_CUDNN == "true" ] && installCuDNN
+
+[ ! -z $CONTAINER_RUNTIME ] && installNvidiaContainerToolkit
 
 # NOTE: `sudo reboot` is required to complete the installation.
 [ $IS_REBOOT_AFTER_INSTALLATION == "true" ] && sudo reboot
