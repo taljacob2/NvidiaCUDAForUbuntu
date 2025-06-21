@@ -18,8 +18,8 @@ This script installs:
   nvcc -V
   ```
 
-- **Optionally, additional NVIDIA CUDA Drivers**
-  - **CuDNN**
+- **Optionally, additional NVIDIA CUDA Tools**
+  - **NVIDIA cuDNN**
     Verify the installation with:
     ```
     ls /usr/src/cudnn_samples_*
@@ -71,7 +71,9 @@ displayHelp() {
     echo "This script installs:"
     echo "- NVIDIA Drivers"
     echo "- NVIDIA CUDA Drivers"
-    echo "- Optionally, additional NVIDIA CUDA Drivers"
+    echo "- Optionally, additional NVIDIA CUDA Tools"
+    echo "  - NVIDIA cuDNN"
+    echo "  - NVIDIA Container Toolkit"
     echo
     echo "Requirements:"
     echo "- Ubuntu Linux."
@@ -92,7 +94,7 @@ displayHelp() {
     echo "  -o, --overwrite          Boolean. \`false\` by default."
     echo "                           Overwrite existing NVIDIA/CUDA installations."
     echo "  -d, --cudnn              Boolean. \`false\` by default."
-    echo "                           Install cuDNN."
+    echo "                           Install NVIDIA cuDNN."
     echo "  -c, --container          Accepts one of the following values: \`docker\`, \`containerd\`, \`crio\`. Not set by default."
     echo "                           Install NVIDIA Container Toolkit, and configures it to the selected container runtime."
     echo "                           Examples: \`-c=docker\` or \`--container=docker\`"
