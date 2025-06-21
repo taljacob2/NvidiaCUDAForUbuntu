@@ -47,12 +47,12 @@ Requirements:
 See all the documentation here:
 
 ```
-bash install-nvidia-drivers-and-cuda-for-ubuntu.sh --help
+sudo bash install-nvidia-drivers-and-cuda-for-ubuntu.sh --help
 ```
 
 Usage Example:
 ```
-bash install-nvidia-drivers-and-cuda-for-ubuntu.sh -s -r -o -d -c=docker
+sudo bash install-nvidia-drivers-and-cuda-for-ubuntu.sh -s -r -o -d -c=docker
 ```
 '
 
@@ -99,7 +99,7 @@ displayHelp() {
     echo
     echo "Usage Example:"
     echo "\`\`\`"
-    echo "bash install-nvidia-drivers-and-cuda-for-ubuntu.sh -s -r -o -d -c=docker"
+    echo "sudo bash install-nvidia-drivers-and-cuda-for-ubuntu.sh -s -r -o -d -c=docker"
     echo "\`\`\`"
     echo
     exit 0
