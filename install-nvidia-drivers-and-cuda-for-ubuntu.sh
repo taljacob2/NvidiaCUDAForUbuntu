@@ -32,6 +32,11 @@ This script installs:
     *Prerequisites:*
     The machine must already have the selected container runtime installed.
 
+    Verify the installation with:
+    ```
+    nvidia-ctk --version
+    ```
+
 Requirements:
 - Ubuntu Linux.
 - Secure boot is disabled (you can check it with `mokutil --sb-state`).
