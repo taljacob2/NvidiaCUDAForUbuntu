@@ -117,8 +117,9 @@ installNvidiaCudaDrivers() {
   # Documentation here: https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_network
 
   # Install Nvidia Cuda Toolkit
-  wget "https://developer.download.nvidia.com/compute/cuda/repos/$(uname -n)04/x86_64/cuda-keyring_1.1-1_all.deb"
-  sudo dpkg -i cuda-keyring_1.1-1_all.deb
+  local cudaKeyring=cuda-keyring_1.1-1_all.deb
+  wget "https://developer.download.nvidia.com/compute/cuda/repos/$(uname -n)04/x86_64/$cudaKeyring"
+  sudo dpkg -i $cudaKeyring
   sudo apt-get update
   sudo apt-get -y install cuda-toolkit-12-9
 
@@ -139,6 +140,9 @@ installNvidiaCudaDrivers() {
 
   # Run ldconfig to update the shared library cache:
   sudo ldconfig
+
+  # Clean working directory leftovers.
+  rm -f $cudaKeyring
 }
 
 installCuDNN() {
