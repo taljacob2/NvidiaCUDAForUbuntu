@@ -221,7 +221,7 @@ done
 
 sudo apt update -y
 
-sudo apt install gcc-12 g++-12 linux-headers-$(uname -r) build-essential
+sudo apt install -y gcc-12 g++-12 linux-headers-$(uname -r) build-essential
 
 sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 10
 sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-12 20
