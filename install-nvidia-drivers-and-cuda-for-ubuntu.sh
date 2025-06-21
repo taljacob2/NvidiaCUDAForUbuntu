@@ -32,11 +32,10 @@ This script installs:
     *Prerequisites:*
     The machine must already have the selected container runtime installed.
 
-
 Requirements:
 - Ubuntu Linux.
-- Secure boot is disabled (you can check it with 'mokutil --sb-state').
-- There is an NVIDIA GPU attached (you can check it with 'lspci -nnk | grep -i nvidia').
+- Secure boot is disabled (you can check it with `mokutil --sb-state`).
+- There is an NVIDIA GPU attached (you can check it with `lspci -nnk | grep -i nvidia`).
 - Run this script with `sudo` privilleges.
 - A reboot is required to complete the installation.
 
@@ -44,6 +43,11 @@ See all the documentation here:
 
 ```
 bash install-nvidia-drivers-and-cuda-for-ubuntu.sh --help
+```
+
+Usage Example:
+```
+bash install-nvidia-drivers-and-cuda-for-ubuntu.sh -s -r -o -d -c=docker
 ```
 '
 
@@ -67,26 +71,31 @@ displayHelp() {
     echo "Requirements:"
     echo "- Ubuntu Linux."
     echo "- Secure boot is disabled."
-    echo "- There is an NVIDIA GPU attached (you can check it with 'lspci -nnk | grep -i nvidia | grep -i vga')"
-    echo "- Run this script with 'sudo' privilleges."
+    echo "- There is an NVIDIA GPU attached (you can check it with \`lspci -nnk | grep -i nvidia | grep -i vga\`)"
+    echo "- Run this script with \`sudo\` privilleges."
     echo
     echo "Options:"
     echo "  -h, --help               Show this help message and exit."
-    echo "  -s, --headless-server    Boolean. "false" by default."
+    echo "  -s, --headless-server    Boolean. \`false\` by default."
     echo "                           Install in headless mode (no attached display)."
-    echo "                           Set this to "true" only if you run Ubuntu Server without a display attached."
-    echo "  -r, --reboot             Boolean. "false" by default."
+    echo "                           Set this to \`true\` only if you run Ubuntu Server without a display attached."
+    echo "  -r, --reboot             Boolean. \`false\` by default."
     echo "                           A reboot is required to complete the installation."
     echo "                           This option reboots the system after installation."
-    echo "                           Set this to "true" if you wish for the script to do so for you."
-    echo "                           Set this to "false" if you wish to do so manually later."
-    echo "  -o, --overwrite          Boolean. "false" by default."
+    echo "                           Set this to \`true\` if you wish for the script to do so for you."
+    echo "                           Set this to \`false\` if you wish to do so manually later."
+    echo "  -o, --overwrite          Boolean. \`false\` by default."
     echo "                           Overwrite existing NVIDIA/CUDA installations."
-    echo "  -d, --cudnn              Boolean. "false" by default."
+    echo "  -d, --cudnn              Boolean. \`false\` by default."
     echo "                           Install cuDNN."
-    echo "  -c, --container          Accepts one of the following values: "docker", "containerd", "crio". Not set by default."
+    echo "  -c, --container          Accepts one of the following values: \`docker\`, \`containerd\`, \`crio\`. Not set by default."
     echo "                           Install NVIDIA Container Toolkit, and configures it to the selected container runtime."
-    echo "                           Examples: '-c=docker' or '--container=docker'"
+    echo "                           Examples: \`-c=docker\` or \`--container=docker\`"
+    echo
+    echo "Usage Example:"
+    echo "\`\`\`"
+    echo "bash install-nvidia-drivers-and-cuda-for-ubuntu.sh -s -r -o -d -c=docker"
+    echo "\`\`\`"
     echo
     exit 0
 }
